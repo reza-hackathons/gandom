@@ -28,7 +28,7 @@ async def main(subnet_tag: str,
                min_sources: int,
                stream_size: int):
     package = await vm.repo(
-        image_hash="5d08fb7230a379eb30cb5fa3d21c4b02aa84b6e50909c2f685bdf3dc",
+        image_hash="8504e7851d3257f145f41fff8b68866a801795875cd17febbcb50d6d",
         min_mem_gib=0.5,
         min_storage_gib=2.0,
     )    
@@ -37,14 +37,15 @@ async def main(subnet_tag: str,
           mi = task.data["index"]
           length = task.data["stream_size"]          
           commands = (
-              f"/opt/gen_random {length} > /golem/output/chaos.bin"
+            f"/opt/generators/csprng {length} > /golem/output/secret.bin;"  
+            f"/opt/generators/chaos_prng {length} > /golem/output/chaos.bin"
           )
           ctx.run("/bin/sh",
               "-c",
               commands
           )
-          output_file = f"chaos{mi}.bin"
-          ctx.download_file(f"/golem/output/chaos.bin", f"out/{output_file}")
+          ctx.download_file(f"/golem/output/chaos.bin", f"out/chaos{mi}.bin")
+          ctx.download_file(f"/golem/output/secret.bin", f"out/secret{mi}.bin")
           try:
               # Set timeout for executing the script on the provider. Two minutes is plenty
               # of time for computing a single frame, for other tasks it may be not enough.
@@ -53,7 +54,7 @@ async def main(subnet_tag: str,
               yield ctx.commit(timeout=timedelta(seconds=75))
               # TODO: Check if job results are valid
               # and reject by: task.reject_task(reason = 'invalid file')             
-              task.accept_result(result=output_file)
+              task.accept_result(result="Random streams[secret, chaos]")
           except BatchTimeoutError:
               print(
                   f"{utils.TEXT_COLOR_RED}"
