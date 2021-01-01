@@ -45,3 +45,6 @@ Note that this API is just an experiment and still in development. So, please em
 - Make sure the sources are distinct
 - Cryptographically secure tests & benchmarks
 - Hook a public REST API for smart contract consumers
+
+## Some presentation
+[https://siasky.net/BACpmQBkTw5Ut1wuWFa6r3xQZcQMGlf26LhE2PmpkviVAQ](https://siasky.net/BACpmQBkTw5Ut1wuWFa6r3xQZcQMGlf26LhE2PmpkviVAQ)
